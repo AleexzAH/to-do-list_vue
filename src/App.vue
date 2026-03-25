@@ -4,6 +4,7 @@ import { reactive } from 'vue';
 
 const estado = reactive({
   filtro: 'todas',
+  tarefaTemp: '',
   tarefas: [
     {
       titulo: "Estudar ES6",
@@ -40,6 +41,16 @@ const getTarefasFiltradas = () => {
       return estado.tarefas;
   }
 }
+
+const cadastraTarefa = () => {
+  const tarefaNova = {
+    titulo: estado.tarefaTemp,
+    finalizada: false,
+  }
+  estado.tarefas.push(tarefaNova);
+  estado.tarefaTemp = '';
+}
+
 </script>
 
 <template>
@@ -48,10 +59,10 @@ const getTarefasFiltradas = () => {
       <h1> Minhas tarefas </h1>
       <p> Você possui {{ getTarefasPendentes().length }} tarefas pendentes</p>
     </header>
-    <form action="submit">
+    <form @submit.prevent="cadastraTarefa">
       <div class="row">
         <div class="col">
-          <input type="text" placeholder="Digite a descrição da tarefa" class="form-control">
+          <input :value="estado.tarefaTemp" @change="evento => estado.tarefaTemp = evento.target.value" required type="text" placeholder="Digite a descrição da tarefa" class="form-control">
         </div>
         <div class="col-md-2">
           <button type="submit" class="btn btn-primary">Cadastrar</button>
