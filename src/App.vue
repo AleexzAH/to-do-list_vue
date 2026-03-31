@@ -1,68 +1,37 @@
 <script setup>
   import { reactive } from 'vue';
-  import Cabecalho from './components/Cabecalho.vue';
-  import Formulario from './components/Formulario.vue';
-  import ListaDeTarefas from './components/ListaDeTarefas.vue';
+  import Layout from './components/Layout.vue';
+
 
 
 const estado = reactive({
-  filtro: 'todas',
-  tarefaTemp: '',
-  tarefas: [
-    {
-      titulo: "Estudar ES6",
-      finalizada: false,
-    },
-    {
-      titulo: "Estudar SASS",
-      finalizada: false,
-    },
-    {
-      titulo: "Academia",
-      finalizada: true,
-    }
-  ]
+  number1: 0,
+  number2: 0,
+  operacao: '',    
 })
 
-const getTarefasPendentes = () => {
-  return estado.tarefas.filter(tarefa => !tarefa.finalizada);
-}
+const getOperacao = () => {
+  const a = +estado.number1;
+  const b = +estado.number2;
 
-const getTarefasFinalizadas = () => {
-  return estado.tarefas.filter(tarefa => tarefa.finalizada);
-}
-
-const getTarefasFiltradas = () => {
-  const { filtro } = estado;
-
-  switch (filtro) {
-    case 'pendentes':
-      return getTarefasPendentes();
-    case 'finalizadas':
-      return getTarefasFinalizadas();
-    default:
-      return estado.tarefas;
+  switch (estado.operacao) {
+    case 'soma': return a + b;
+    case 'subtracao': return a - b;
+    case 'divisao': return a / b;
+    case 'multiplicacao': return a * b;
+    default: return a + b;
   }
-}
-
-const cadastraTarefa = () => {
-  const tarefaNova = {
-    titulo: estado.tarefaTemp,
-    finalizada: false,
-  }
-  estado.tarefas.push(tarefaNova);
-  estado.tarefaTemp = '';
 }
 
 </script>
 
 <template>
   <div class="container">
-    <Cabecalho :tarefas-pendentes="getTarefasPendentes().length"/>
-    <Formulario :trocar-filtro="evento => estado.filtro = evento.target.value"  :tarefa-temp="estado.tarefaTemp":edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value" :cadastrar-tarefa="cadastraTarefa"/>
-    <ListaDeTarefas :tarefas="getTarefasFiltradas()"/>
+    <Layout :numero-um="evento => estado.number1 = +evento.target.value" 
+      :numero-dois="evento => estado.number2 = +evento.target.value"
+      :trocar-operacao="evento => estado.operacao = evento.target.value"
+      :resultado="getOperacao()"/>
     
   </div>
-  
 </template>
 
